@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ .Site.Title }} — Redfish for Go</title>
+<meta name="description" content="go-redfish: Go libraries for the DMTF Redfish API of a server's BMC. Read what a node consumes, with bounded answers, typed errors and fuzzed decoders; standard library only.">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+{{/* ⛔ This meta is what the deploy VERIFIES: it fetches the live URL and
+     fails unless the generator is Hugo, so a Pages source left on a branch
+     (Jekyll rendering README.md) cannot pass for this site. Removing this line
+     breaks the deploy rather than the page. */}}
+{{ hugo.Generator }}
+{{ partial "styles.html" . }}
+</head>
+<body class="lm">
+  <header class="nav"><div class="wrap">
+    <a class="brand" href="/"><img class="glyph" src="/img/logo.svg" width="32" height="32" alt="go-redfish logo"> go-redfish</a>
+    <nav><a href="#redfish">Redfish</a><a href="#security">Security</a><a href="#repos">Repositories</a><a href="https://go-redfish.github.io/docs/">Docs</a></nav>
+    {{ partial "theme-toggle.html" . }}
+  </div></header>
+  {{ partial "fork-ribbon.html" "https://github.com/go-redfish/redfish" }}
+
+  <div class="hero"><div class="wrap">
+    <div>
+      <h1 class="head">Talk to a server's BMC,<br><span class="accent">in pure Go.</span></h1>
+      <p class="sub">go-redfish is a set of Go libraries for the <a href="https://www.dmtf.org/standards/redfish">DMTF Redfish</a> API: read what a node consumes, and manage it out of band, without shelling out to a Python client.</p>
+      <div class="cta">
+        <a class="btn btn-primary" href="https://go-redfish.github.io/docs/">{{ partial "icons/book.html" . }}Read the documentation →</a>
+      </div>
+      {{/* ⛔ Status, said where it is read. redfish v0.2.0 is the current release.
+           This line and the tags in hugo.toml change together. */}}
+      <div class="trust"><span><b>redfish v0.2.0</b> — current release</span><span><b>standard library</b> only, CGO off</span><span><b>fuzzed</b> decoders and meter</span></div>
+    </div>
+    <div class="term">
+      <div class="bar"><i style="background:#ff5f57"></i><i style="background:#febc2e"></i><i style="background:#28c840"></i><span class="t">terminal</span></div>
+<pre><span class="c-com"># add the client to a module</span>
+$ go get github.com/go-redfish/redfish@v0.2.0
+
+<span class="c-com"># what it reads from a BMC</span>
+<span class="c-key">energy counter</span>   <span class="c-str">EnvironmentMetrics.EnergykWh</span>
+<span class="c-key">else the power</span>    <span class="c-str">Power.PowerControl</span>, integrated by the trapezoid</pre>
+    </div>
+  </div></div>
+
+  <div class="strip"><div class="wrap">
+    <span class="lead-line">One organisation, <b>{{ len .Site.Params.repos }}</b> repositories</span>
+    <div class="mods">{{ range .Site.Params.repos }}<a href="#repos">{{ .name }}</a>{{ end }}</div>
+  </div></div>
+
+  <section id="redfish"><div class="wrap">
+    <span class="eyebrow">The client</span>
+    <h2>A BMC, <i>read</i> safely.</h2>
+    <p class="lead"><code>github.com/go-redfish/redfish</code> finds the service root, authenticates, and reads. It was written for the <a href="https://github.com/go-llmflow/gateway">go-llmflow gateway</a>, which bills the electricity a shared GPU machine uses, and serves any tool that needs a BMC's answers.</p>
+    <div class="grid">
+      <div class="card"><div class="ico">🔎</div><h3>Service discovery</h3><p>It starts at <code>/redfish/v1</code> and follows the links the service gives, rather than assuming a vendor's paths.</p></div>
+      <div class="card"><div class="ico">🔑</div><h3>Basic or session</h3><p>HTTP Basic over https, or a session whose token is used and then logged out. A CA file can be given for a BMC's own certificate.</p></div>
+      <div class="card"><div class="ico">⚡</div><h3>From reads to energy</h3><p>A <code>Meter</code> turns successive reads into energy: the difference of a counter, or the trapezoid of a polled power, with no interpolation across a gap and no negative energy when a counter resets.</p></div>
+    </div>
+  </div></section>
+
+  <section id="security"><div class="wrap">
+    <span class="eyebrow">Security</span>
+    <h2>A BMC's answer is <i>untrusted</i> input.</h2>
+    <p class="lead">A BMC is a privileged, often old, network service. The client treats everything it says as data to be checked.</p>
+    <div class="grid">
+      <div class="card"><div class="ico">🔒</div><h3>https only</h3><p>A URL that is not https, or that carries credentials, is refused. Certificates are verified, TLS 1.2 or later, and there is no switch to turn verification off.</p></div>
+      <div class="card"><div class="ico">📏</div><h3>Bounded answers</h3><p>A response is read up to a fixed size; a malformed or oversized one is a typed error.</p></div>
+      <div class="card"><div class="ico">🧪</div><h3>Fuzzed</h3><p>The JSON decoders and the meter are fuzzed, with the corpus committed, and CI runs <code>go vet</code>, <code>go test -race</code> and <code>govulncheck</code>.</p></div>
+    </div>
+  </div></section>
+
+  <section id="repos"><div class="wrap">
+    <span class="eyebrow">The organisation</span>
+    <h2>Repositories</h2>
+    <div class="grid">
+      {{ range .Site.Params.repos }}
+      <article class="card">
+        <h3><a href="{{ .url }}">{{ .name }}</a> <span class="tag {{ .status }}">{{ if .label }}{{ .label }}{{ else if eq .status "active" }}on main, not released{{ else }}{{ .status }}{{ end }}</span></h3>
+        <p>{{ .blurb | markdownify }}</p>
+      </article>
+      {{ end }}
+    </div>
+  </div></section>
+
+  <section id="eco" style="padding-top:6px"><div class="wrap">
+    <div class="band">
+      <h2>Follow the work.</h2>
+      <p>Built in the open, one pull request at a time, each rule traced to the DMTF document it comes from.</p>
+      <a class="btn btn-ghost" href="https://github.com/go-redfish">{{ partial "icons/github.html" . }}The organisation on GitHub →</a>
+    </div>
+  </div></section>
+
+  <footer><div class="wrap"><span>© the go-redfish authors{{ if not (partial "mantra-on.html" .) }} · BSD-3-Clause{{ end }}</span>{{ if not (partial "mantra-on.html" .) }}<span>Pure Go · CGO_ENABLED=0</span>{{ end }}</div></footer>
+</body>
+</html>
