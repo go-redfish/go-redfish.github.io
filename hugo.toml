@@ -43,9 +43,9 @@ disableKinds = ["taxonomy", "term", "RSS", "sitemap", "404"]
 [[params.repos]]
   name   = "redfish"
   status = "ready"
-  label  = "v0.2.0"
+  label  = "v0.4.0"
   url    = "https://github.com/go-redfish/redfish"
-  blurb  = "A Go client for the DMTF Redfish API of a server's BMC, standard library only. Service discovery, HTTP Basic or session authentication, a CA file for the BMC's certificate, bounded answers and typed errors. Reads a node's energy counter (`EnvironmentMetrics.EnergykWh`), else its power, and a `Meter` turns successive reads into energy: a counter's difference, or the trapezoid of a polled power, with no interpolation across a gap and no negative energy when a counter resets. The JSON decoders and the meter are fuzzed. **Current release v0.2.0:** `go get github.com/go-redfish/redfish@v0.2.0`."
+  blurb  = "A Go client for the DMTF Redfish API of a server's BMC; the library uses only the standard library. It has service discovery, HTTP Basic or session authentication, a CA file for the BMC's certificate, bounded answers and typed errors, plus generic requests (`Get`, `Patch` with `If-Match`, `Post`, `Delete`, `WaitTask`). The Systems area covers power, boot override and order, BIOS, secure boot, power restore policy, LED, asset tag, inventories and health. A `Meter` turns a node's energy counter, else its polled power, into energy, never across a gap and never negative. It comes with a `redfish` command line (sessions, raw requests, `systems`) and a stateful mock BMC built from two DMTF trees. The goal is parity with the Ansible `redfish_*` modules, one area per release. **Current release v0.4.0:** `go get github.com/go-redfish/redfish@v0.4.0`."
 [[params.repos]]
   name   = "docs"
   status = "active"
