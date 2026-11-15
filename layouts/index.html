@@ -25,9 +25,8 @@
     <div>
       <h1 class="head">Talk to a server's BMC,<br><span class="accent">in pure Go.</span></h1>
       <p class="sub">go-redfish is a set of Go libraries for the DMTF Redfish API: read what a node consumes, and manage it out of band, without shelling out to a Python client.</p>
-      <div class="cta">
-        <a class="btn btn-primary" href="https://go-redfish.github.io/docs/">{{ partial "icons/book.html" . }}Read the documentation →</a>
-      </div>
+      {{/* [[params.cta]] in hugo.toml: the kit renders the row */}}
+      {{ partial "cta.html" . }}
       {{/* ⛔ Status, said where it is read. redfish v0.2.0 is the current release.
            This line and the tags in hugo.toml change together. */}}
       <div class="trust"><span><b>redfish v0.2.0</b> — current release</span><span><b>standard library</b> only, CGO off</span><span><b>fuzzed</b> decoders and meter</span></div>
@@ -91,6 +90,6 @@ $ go get github.com/go-redfish/redfish@v0.2.0
     </div>
   </div></section>
 
-  <footer><div class="wrap"><span>© the go-redfish authors{{ if not (partial "mantra-on.html" .) }} · BSD-3-Clause{{ end }}</span>{{ if not (partial "mantra-on.html" .) }}<span>Pure Go · CGO_ENABLED=0</span>{{ end }}</div></footer>
+  <footer><div class="wrap"><span>© the go-redfish authors{{ if not (partial "mantra-on.html" .) }} · BSD-3-Clause{{ end }}</span>{{ if not (partial "mantra-on.html" .) }}{{ if not (partial "mantra-on.html" $) }}<span>Pure Go · CGO_ENABLED=0</span>{{ end }}{{ end }}</div></footer>
 </body>
 </html>
